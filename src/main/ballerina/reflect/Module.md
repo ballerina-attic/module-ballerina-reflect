@@ -1,6 +1,6 @@
-## Package overview
+## Module overview
 
-This package provides utility methods for obtaining reflective information about the Ballerina runtime.
+This module provides utility methods for obtaining reflective information about the Ballerina runtime.
 
 ## Samples
 
@@ -62,6 +62,6 @@ service<http:Service> hello bind { port: 9090 } {
 
 reflect:annotationData[] annotations= reflect:getServiceAnnotations(hello); 
 string annoName = annotations[0].name; //Eg. “ServiceConfig”
-string annoPkg = annotations[0].pkgName; //Eg/ “ballerina.http”
+string annoPkg = annotations[0].moduleName; //Eg/ “ballerina.http”
 
 ```
