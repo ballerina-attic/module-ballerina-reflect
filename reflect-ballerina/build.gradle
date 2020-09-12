@@ -52,6 +52,20 @@ task unpackJballerinaTools(type: Copy) {
     }
 }
 
+def moduleName = "reflect"
+def moduleOrg = "ballerina"
+def ballerinaConfigFile = new File("$project.projectDir/Ballerina.toml")
+def artifactBallerinaDocs = file("$project.projectDir/build/docs_parent/")
+def artifactCacheParent = file("$project.projectDir/build/cache_parent/")
+def artifactLibParent = file("$project.projectDir/build/lib_parent/")
+def tomlVersion = project.version.split("-")[0]
+def ballerinaCentralAccessToken = System.getenv('BALLERINA_CENTRAL_ACCESS_TOKEN')
+def targetBallerinaJar = file("$project.projectDir/target/caches/jar_cache/${moduleOrg}/${moduleName}/${tomlVersion}/${moduleOrg}-${moduleName}-${tomlVersion}.jar")
+def targetNativeJar = file("$project.rootDir/${moduleName}-native/build/libs/${moduleName}-native-${project.version}.jar")
+def distributionPath =  project.projectDir.absolutePath + "/build/target/extracted-distributions/jballerina-tools-zip/jballerina-tools-${ballerinaLangVersion}"
+def distributionBinPath = distributionPath + "/bin"
+def originalConfig = ballerinaConfigFile.text
+
 task unpackStdLibs() {
     doLast {
         configurations.ballerinaStdLibs.resolvedConfiguration.resolvedArtifacts.each { artifact ->
@@ -64,9 +78,9 @@ task unpackStdLibs() {
 }
 
 task copyStdlibs(type: Copy) {
-    def ballerinaDist = "build/target/extracted-distributions/jballerina-tools-zip/jballerina-tools-${ballerinaLangVersion}"
-    into ballerinaDist
+    dependsOn(unpackStdLibs)
 
+    into distributionPath
     /* Standard Libraries */
     configurations.ballerinaStdLibs.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         def artifactExtractedPath = "${buildDir}/target/extracted-distributions/" + artifact.name + "-zip"
@@ -92,19 +106,7 @@ task copyStdlibs(type: Copy) {
     }
 }
 
-def moduleName = "reflect"
-def moduleOrg = "ballerina"
-def ballerinaConfigFile = new File("$project.projectDir/Ballerina.toml")
-def artifactBallerinaDocs = file("$project.projectDir/build/docs_parent/")
-def artifactCacheParent = file("$project.projectDir/build/cache_parent/")
-def artifactLibParent = file("$project.projectDir/build/lib_parent/")
-def tomlVersion = project.version.split("-")[0]
-def ballerinaCentralAccessToken = System.getenv('BALLERINA_CENTRAL_ACCESS_TOKEN')
-def targetBallerinaJar = file("$project.projectDir/target/caches/jar_cache/${moduleOrg}/${moduleName}/${tomlVersion}/${moduleOrg}-${moduleName}-${tomlVersion}.jar")
-def targetNativeJar = file("$project.rootDir/${moduleName}-native/build/libs/${moduleName}-native-${project.version}.jar")
-def originalConfig = ballerinaConfigFile.text
-
-task updateTomlVerions {
+task updateTomlFile {
     doLast {
         def stdlibDependentConfigVersion = project.stdlibConfigVersion.split("-")[0]
         def stdlibDependentStringUtilsVersion = project.stdlibStringUtilsVersion.split("-")[0]
@@ -128,9 +130,11 @@ task revertTomlFile {
 }
 
 task ballerinaTest {
-    dependsOn(copyStdlibs)
     dependsOn(":reflect-native:build")
-    dependsOn(updateTomlVerions)
+    dependsOn(unpackJballerinaTools)
+    dependsOn(unpackStdLibs)
+    dependsOn(copyStdlibs)
+    dependsOn(updateTomlFile)
     finalizedBy(revertTomlFile)
 
     def debugParams = ""
@@ -151,13 +155,21 @@ task ballerinaTest {
     }
 }
 
+test {
+    dependsOn(ballerinaTest)
+}
+
 task ballerinaBuild {
     inputs.dir file(project.projectDir)
+    dependsOn(":reflect-native:build")
+    dependsOn(unpackJballerinaTools)
+    dependsOn(unpackStdLibs)
+    dependsOn(copyStdlibs)
+    dependsOn(updateTomlFile)
+    dependsOn(ballerinaTest)
     finalizedBy(revertTomlFile)
 
     doLast {
-        def distributionBinPath =  project.projectDir.absolutePath + "/build/target/extracted-distributions/jballerina-tools-zip/jballerina-tools-${ballerinaLangVersion}/bin"
-
         // Build and populate caches
         exec {
             workingDir project.projectDir
@@ -263,9 +275,6 @@ publishing {
     }
 }
 
-ballerinaBuild.dependsOn ":reflect-native:build"
-unpackStdLibs.dependsOn unpackJballerinaTools
-copyStdlibs.dependsOn unpackStdLibs
-updateTomlVerions.dependsOn copyStdlibs
-ballerinaBuild.dependsOn updateTomlVerions
-build.dependsOn ballerinaBuild
+build {
+    dependsOn(ballerinaBuild)
+}
