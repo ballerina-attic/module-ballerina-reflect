@@ -20,7 +20,7 @@ import ballerina/config;
 
 const string MODULE_NAME = "ballerina/reflect";
 
-type Listener object {
+class Listener {
     *lang:Listener;
 
     public function init() {
@@ -42,7 +42,7 @@ type Listener object {
     public function __immediateStop() returns error? {
         return ();
     }
-};
+}
 
 listener Listener lis = new();
 
