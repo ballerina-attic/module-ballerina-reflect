@@ -27,3 +27,12 @@ dependencies {
     compile group: 'org.ballerinalang', name: 'annotations', version: "${ballerinaLangVersion}"
     compile group: 'org.slf4j', name: 'slf4j-jdk14', version: "${slf4jVersion}"
 }
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
