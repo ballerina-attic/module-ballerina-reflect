@@ -18,7 +18,7 @@ This module provides utility methods for obtaining reflective information about 
 
    * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
    
-   * [OpenJDK](https://openjdk.java.net/projects/jdk/11/)
+   * [OpenJDK](https://adoptopenjdk.net/)
    
         > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed JDK.
 
