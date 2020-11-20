@@ -1,19 +1,15 @@
-[project]
-org-name = "ballerina"
+[package]
+org = "ballerina"
+name = "reflect"
 version = "@toml.version@"
 
-[dependencies]
-"ballerina/config" = "@stdlib.config.version@"
-"ballerina/stringutils" = "@stdlib.stringutils.version@"
-"ballerina/system" = "@stdlib.system.version@"
-"ballerina/io" = "@stdlib.io.version@"
+[[dependnecy]]
+org = "ballerina"
+name = "config"
+version = "@stdlib.config.version@"
 
-[platform]
-target = "java11"
-
-    [[platform.libraries]]
-    artifactId = "reflect"
-    version = "@project.version@"
-    path = "../reflect-native/build/libs/reflect-native-@project.version@.jar"
-    groupId = "ballerina"
-    modules = ["reflect"]
+[[platform.java11.dependency]]
+path = "../reflect-native/build/libs/reflect-native-@project.version@.jar"
+groupId = "ballerina"
+artifactId = "reflect"
+version = "@project.version@"
