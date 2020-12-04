@@ -15,32 +15,31 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/lang.'object as lang;
 import ballerina/config;
 
 const string MODULE_NAME = "ballerina/reflect";
 
-class Listener {
-    *lang:Listener;
+public class Listener {
+    boolean initialized = false;
+    boolean started = false;
 
-    public isolated function init() {
-    }
-
-    public isolated function __attach(service s, string? name = ()) returns error? {
-    }
-
-    public isolated function __detach(service s) returns error? {
-    }
-
-    public isolated function __start() returns error? {
-    }
-
-    public isolated function __gracefulStop() returns error? {
+    public isolated function 'start() returns error? {
+        self.started = true;
         return ();
     }
+    public isolated function gracefulStop() returns error? {
+    }
+    public isolated function immediateStop() returns error? {
+    }
+    public isolated function detach(service object {} s) returns error? {
+    }
+    public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
+    }
+    isolated function register(service object {} s, string[]|string? name) returns error? {
+    }
 
-    public isolated function __immediateStop() returns error? {
-        return ();
+    public function init() {
+        self.initialized = true;
     }
 }
 
@@ -57,15 +56,27 @@ annotation Annotation resourceAnnotation on function;
 string serviceAnnotationValue = "serviceAnnotation";
 string resourceAnnotationValue = "resourceAnnotation";
 
-@serviceAnnotation{foo: serviceAnnotationValue}
-service ser on lis {
+type S service object {
+    resource function get processRequest() returns json;
+};
+
+service object {} ser = @serviceAnnotation{foo: serviceAnnotationValue}
+service object {
     @resourceAnnotation{foo: resourceAnnotationValue}
-    resource function res() {
+    resource function get processRequest() returns json {
+        return { output: "Hello" };
     }
+};
+
+public function attachService() {
+    _ = <any> lis.attach(ser, "/");
 }
 
-@test:Config {}
+@test:Config {
+    before: "attachService"
+}
 public function testServiceAnnotation() {
+
     string annotationName = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION") +
                             COLON + serviceAnnotationValue;
     Annotation? annot = <Annotation?> getServiceAnnotations(ser, annotationName);
@@ -91,7 +102,8 @@ public function testServiceAnnotationWitSeparateModuleName() {
 }
 
 @test:Config {
-    dependsOn: ["testServiceAnnotationWitSeparateModuleName"]
+    dependsOn: ["testServiceAnnotationWitSeparateModuleName"],
+    enable: false
 }
 public function testResourceAnnotations() {
     string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
