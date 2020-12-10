@@ -19,9 +19,10 @@
 package org.ballerinalang.stdlib.reflect;
 
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.types.MemberFunctionType;
+import io.ballerina.runtime.api.types.ResourceFunctionType;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
+import io.ballerina.runtime.api.types.ServiceType;
 
 /**
  * Utility class represents annotation related functionality.
@@ -39,10 +40,11 @@ public class AnnotationUtils {
      * @return annotation value object.
      */
     public static Object externGetResourceAnnotations(BObject service, BString resourceName, BString annot) {
-        MemberFunctionType[] functions = service.getType().getAttachedFunctions();
+        ServiceType serviceType = (ServiceType) service.getType();
+        ResourceFunctionType[] functions = serviceType.getResourceFunctions();
 
-        for (MemberFunctionType function : functions) {
-            if (function.getName().equals(resourceName.getValue())) {
+        for (ResourceFunctionType function : functions) {
+            if (function.getName().equals("$" + function.getAccessor().strip() + "$" + resourceName.getValue().strip())) {
                 Object resourceAnnotation = function.getAnnotation(annot);
                 if (resourceAnnotation instanceof String) {
                     return StringUtils.fromString((String) resourceAnnotation);
@@ -61,7 +63,8 @@ public class AnnotationUtils {
      * @return annotation value object.
      */
     public static Object externGetServiceAnnotations(BObject service, BString annot) {
-        Object serviceAnnotation = service.getType().getAnnotation(annot);
+        ServiceType serviceType = (ServiceType) service.getType();
+        Object serviceAnnotation = serviceType.getAnnotation(annot);
         if (serviceAnnotation instanceof String) {
             return StringUtils.fromString((String) serviceAnnotation);
         }
