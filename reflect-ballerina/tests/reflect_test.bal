@@ -101,13 +101,10 @@ public function testServiceAnnotationWitSeparateModuleName() {
     test:assertTrue(isExpectedAnnotation, "Returned annotation mismatch");
 }
 
-@test:Config {
-    dependsOn: ["testServiceAnnotationWitSeparateModuleName"],
-    enable: false
-}
+@test:Config {}
 public function testResourceAnnotations() {
     string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
-    Annotation? annot = <Annotation?> getResourceAnnotations(ser, "res", resourceAnnotationValue, moduleNameWithVersion);
+    Annotation? annot = <Annotation?> getResourceAnnotations(ser, "processRequest", resourceAnnotationValue, moduleNameWithVersion);
     boolean isExpectedAnnotation = false;
     if (annot is Annotation && resourceAnnotationValue == annot.foo) {
         isExpectedAnnotation = true;
