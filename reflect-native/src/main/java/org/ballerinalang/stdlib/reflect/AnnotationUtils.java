@@ -19,7 +19,7 @@
 package org.ballerinalang.stdlib.reflect;
 
 import io.ballerina.runtime.api.utils.StringUtils;
-import io.ballerina.runtime.api.types.ResourceFunctionType;
+import io.ballerina.runtime.api.types.ResourceMethodType;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.runtime.api.types.ServiceType;
@@ -41,9 +41,9 @@ public class AnnotationUtils {
      */
     public static Object externGetResourceAnnotations(BObject service, BString resourceName, BString annot) {
         ServiceType serviceType = (ServiceType) service.getType();
-        ResourceFunctionType[] functions = serviceType.getResourceFunctions();
+        ResourceMethodType[] functions = serviceType.getResourceMethods();
 
-        for (ResourceFunctionType function : functions) {
+        for (ResourceMethodType function : functions) {
             if (function.getName().equals("$" + function.getAccessor().strip() + "$" + resourceName.getValue().strip())) {
                 Object resourceAnnotation = function.getAnnotation(annot);
                 if (resourceAnnotation instanceof String) {

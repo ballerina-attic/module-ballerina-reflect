@@ -56,10 +56,6 @@ annotation Annotation resourceAnnotation on function;
 string serviceAnnotationValue = "serviceAnnotation";
 string resourceAnnotationValue = "resourceAnnotation";
 
-type S service object {
-    resource function get processRequest() returns json;
-};
-
 service object {} ser = @serviceAnnotation{foo: serviceAnnotationValue}
 service object {
     @resourceAnnotation{foo: resourceAnnotationValue}
@@ -69,7 +65,7 @@ service object {
 };
 
 public function attachService() {
-    _ = <any> lis.attach(ser, "/");
+    var err = lis.attach(ser, "/");
 }
 
 @test:Config {
