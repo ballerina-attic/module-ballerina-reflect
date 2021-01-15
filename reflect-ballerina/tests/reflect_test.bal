@@ -69,7 +69,7 @@ public function attachService() {
 }
 
 @test:Config {
-    before: "attachService"
+    before: attachService
 }
 public function testServiceAnnotation() {
 
@@ -84,7 +84,7 @@ public function testServiceAnnotation() {
 }
 
 @test:Config {
-    dependsOn: ["testServiceAnnotation"]
+    dependsOn: [testServiceAnnotation]
 }
 public function testServiceAnnotationWitSeparateModuleName() {
     string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
