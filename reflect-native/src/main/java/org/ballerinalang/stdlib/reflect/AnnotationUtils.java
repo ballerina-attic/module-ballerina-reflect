@@ -44,7 +44,7 @@ public class AnnotationUtils {
         ResourceMethodType[] functions = serviceType.getResourceMethods();
 
         for (ResourceMethodType function : functions) {
-            if (function.getName().equals("$" + function.getAccessor().strip() + "$" + resourceName.getValue().strip())) {
+            if (function.getName().equals(resourceName.getValue().strip())) {
                 Object resourceAnnotation = function.getAnnotation(annot);
                 if (resourceAnnotation instanceof String) {
                     return StringUtils.fromString((String) resourceAnnotation);

@@ -100,7 +100,7 @@ public function testServiceAnnotationWitSeparateModuleName() {
 @test:Config {}
 public function testResourceAnnotations() {
     string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
-    Annotation? annot = <Annotation?> getResourceAnnotations(ser, "processRequest", resourceAnnotationValue, moduleNameWithVersion);
+    Annotation? annot = <Annotation?> getResourceAnnotations(ser, "$get$processRequest", resourceAnnotationValue, moduleNameWithVersion);
     boolean isExpectedAnnotation = false;
     if (annot is Annotation && resourceAnnotationValue == annot.foo) {
         isExpectedAnnotation = true;
