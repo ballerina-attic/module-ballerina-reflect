@@ -3,11 +3,6 @@ org = "ballerina"
 name = "reflect"
 version = "@toml.version@"
 
-[[dependnecy]]
-org = "ballerina"
-name = "config"
-version = "@stdlib.config.version@"
-
 [[platform.java11.dependency]]
 path = "../reflect-native/build/libs/reflect-native-@project.version@.jar"
 groupId = "ballerina"

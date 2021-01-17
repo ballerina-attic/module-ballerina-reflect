@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/config;
 
 const string MODULE_NAME = "ballerina/reflect";
 
@@ -73,7 +72,7 @@ public function attachService() {
 }
 public function testServiceAnnotation() {
 
-    string annotationName = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION") +
+    string annotationName = MODULE_NAME + COLON + getModuleVersion() +
                             COLON + serviceAnnotationValue;
     Annotation? annot = <Annotation?> getServiceAnnotations(ser, annotationName);
     boolean isExpectedAnnotation = false;
@@ -87,7 +86,7 @@ public function testServiceAnnotation() {
     dependsOn: [testServiceAnnotation]
 }
 public function testServiceAnnotationWitSeparateModuleName() {
-    string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
+    string moduleNameWithVersion = MODULE_NAME + COLON + getModuleVersion();
     Annotation? annot = <Annotation?> getServiceAnnotations(ser, serviceAnnotationValue,
                                                             moduleNameWithVersion);
     boolean isExpectedAnnotation = false;
@@ -99,7 +98,7 @@ public function testServiceAnnotationWitSeparateModuleName() {
 
 @test:Config {}
 public function testResourceAnnotations() {
-    string moduleNameWithVersion = MODULE_NAME + COLON + config:getAsString("STDLIB_VERSION");
+    string moduleNameWithVersion = MODULE_NAME + COLON + getModuleVersion();
     Annotation? annot = <Annotation?> getResourceAnnotations(ser, "$get$processRequest", resourceAnnotationValue, moduleNameWithVersion);
     boolean isExpectedAnnotation = false;
     if (annot is Annotation && resourceAnnotationValue == annot.foo) {

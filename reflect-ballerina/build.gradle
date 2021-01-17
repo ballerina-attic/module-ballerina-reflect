@@ -94,13 +94,11 @@ task copyStdlibs(type: Copy) {
 
 task updateTomlFile {
     doLast {
-        def stdlibDependentConfigVersion = project.stdlibConfigVersion.split("-")[0]
         def stdlibDependentOsVersion = project.stdlibOsVersion.split("-")[0]
         def stdlibDependentIoVersion = project.stdlibIoVersion.split("-")[0]
 
         def newConfig = ballerinaConfigFile.text.replace("@project.version@", project.version)
         newConfig = newConfig.replace("@toml.version@", tomlVersion)
-        newConfig = newConfig.replace("@stdlib.config.version@", stdlibDependentConfigVersion)
         newConfig = newConfig.replace("@stdlib.os.version@", stdlibDependentOsVersion)
         newConfig = newConfig.replace("@stdlib.io.version@", stdlibDependentIoVersion)
         ballerinaConfigFile.text = newConfig
