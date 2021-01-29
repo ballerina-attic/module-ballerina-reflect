@@ -22,14 +22,6 @@ plugins {
     id "net.researchgate.release" version "2.8.0"
 }
 
-ext.ballerinaLangVersion = project.ballerinaLangVersion
-ext.puppycrawlCheckstyleVersion = project.puppycrawlCheckstyleVersion
-ext.testngVersion = "6.14.3"
-ext.slf4jVersion = "1.7.30"
-ext.stdlibRegexVersion = project.stdlibRegexVersion
-ext.stdlibOsVersion = project.stdlibOsVersion
-ext.stdlibIoVersion = project.stdlibIoVersion
-
 allprojects {
     group = 'org.ballerinalang'
     version = project.version
