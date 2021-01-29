@@ -18,11 +18,11 @@
 
 package org.ballerinalang.stdlib.reflect;
 
-import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.types.ResourceMethodType;
+import io.ballerina.runtime.api.types.ServiceType;
+import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
-import io.ballerina.runtime.api.types.ServiceType;
 
 /**
  * Utility class represents annotation related functionality.
