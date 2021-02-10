@@ -1,6 +1,6 @@
-## Module overview
+## Package overview
 
-This module provides utility methods for obtaining reflective information about the Ballerina runtime.
+This package provides utility methods for obtaining reflective information about the Ballerina runtime.
 
 ### Get service annotations
 
