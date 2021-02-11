@@ -90,7 +90,7 @@ task copyStdlibs(type: Copy) {
     }
 }
 
-task updateTomlVerions {
+task updateTomlVersions {
     doLast {
         def newConfig = ballerinaConfigFile.text.replace("@project.version@", project.version)
         newConfig = newConfig.replace("@toml.version@", tomlVersion)
@@ -254,16 +254,16 @@ publishing {
 
 unpackStdLibs.dependsOn unpackJballerinaTools
 copyStdlibs.dependsOn unpackStdLibs
-updateTomlVerions.dependsOn copyStdlibs
+updateTomlVersions.dependsOn copyStdlibs
 
-ballerinaTest.dependsOn updateTomlVerions
+ballerinaTest.dependsOn updateTomlVersions
 ballerinaTest.dependsOn initializeVariables
 ballerinaTest.dependsOn ":${packageName}-native:build"
 ballerinaTest.finalizedBy revertTomlFile
 test.dependsOn ballerinaTest
 
 ballerinaBuild.dependsOn test
-ballerinaBuild.dependsOn updateTomlVerions
+ballerinaBuild.dependsOn updateTomlVersions
 ballerinaBuild.dependsOn initializeVariables
 ballerinaBuild.dependsOn ":${packageName}-native:build"
 ballerinaBuild.finalizedBy revertTomlFile
